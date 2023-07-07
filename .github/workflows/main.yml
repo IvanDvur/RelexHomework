@@ -31,11 +31,11 @@ jobs:
       - name: Build & Push Docker Image hotel-service
         uses: mr-smithers-excellent/docker-build-push@v5
         with:
-          context: .HotelService/HotelService
+          context: ./HotelService
           image: ivandvurechenskiy/hotel-service
           tags: latest
           registry: docker.io
-          dockerfile: ./Dockerfile
+          dockerfile: ./HotelService/Dockerfile
           username: ivandvurechenskiy
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build & Push Docker Image rating service
