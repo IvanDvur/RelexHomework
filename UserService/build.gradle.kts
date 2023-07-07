@@ -42,9 +42,6 @@ dependencyManagement {
     }
 }
 
-tasks.jar {
-    archiveBaseName.set("user-service")
-}
 tasks.withType<Test> {
     useJUnitPlatform()
 }
