@@ -1,0 +1,104 @@
+version: '3.9'
+
+services:
+
+  userdb:
+    container_name: userdb
+    image: postgres
+    environment:
+      - POSTGRES_DB=userdb
+      - POSTGRES_USER=userdb_user
+      - POSTGRES_PASSWORD=userdb_password
+      - TZ=Europe/Moscow
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U userdb_user -d userdb'" ]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+    ports:
+      - "5438:5432"
+
+  hoteldb:
+    container_name: hoteldb
+    image: postgres
+    environment:
+      - POSTGRES_DB=hoteldb
+      - POSTGRES_USER=hoteldb_user
+      - POSTGRES_PASSWORD=hoteldb_password
+      - TZ=Europe/Moscow
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U hoteldb_user -d hoteldb'" ]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+    ports:
+      - "5439:5432"
+
+  ratingdb:
+    container_name: ratingdb
+    image: postgres
+    environment:
+      - POSTGRES_DB=ratingdb
+      - POSTGRES_USER=ratingdb_user
+      - POSTGRES_PASSWORD=ratingdb_password
+      - TZ=Europe/Moscow
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ratingdb_user -d ratingdb'" ]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+    ports:
+      - "5440:5432"
+
+  user-service:
+    restart: on-failure
+    container_name: user-service
+    image: ivandvurechenskiy/user-service:latest
+    depends_on:
+      userdb:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://userdb:5432/userdb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - TZ=Europe/Moscow
+    ports:
+      - "8080:8080"
+
+  hotel-service:
+    container_name: hotel-service
+    image: ivandvurechenskiy/hotel-service:latest
+    depends_on:
+      hoteldb:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://hoteldb:5432/hoteldb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - TZ=Europe/Moscow
+    ports:
+      - "8081:8081"
+
+  rating-service:
+    container_name: rating-service
+    image: ivandvurechenskiy/rating-service:latest
+    depends_on:
+      ratingdb:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ratingdb:5432/ratingdb
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - TZ=Europe/Moscow
+    ports:
+      - "8082:8082"
+
+
+
+
+
+
+

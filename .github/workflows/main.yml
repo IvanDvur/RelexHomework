@@ -48,3 +48,13 @@ jobs:
           dockerfile: ./RatingService/Dockerfile
           username: ivandvurechenskiy
           password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build & Push Docker Image rating service
+        uses: mr-smithers-excellent/docker-build-push@v5
+        with:
+          context: ./ServiceRegistry
+          image: ivandvurechenskiy/service-registry
+          tags: latest
+          registry: docker.io
+          dockerfile: ./ServiceRegistry/Dockerfile
+          username: ivandvurechenskiy
+          password: ${{ secrets.DOCKER_PASSWORD }}
