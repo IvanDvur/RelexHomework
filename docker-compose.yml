@@ -96,7 +96,11 @@ services:
     ports:
       - "8082:8082"
 
-
+  service-registry:
+    container_name: service-registry
+    image: ivandvurechenskiy/service-registry:latest
+    ports:
+      - "8761:8761"
 
 
 
