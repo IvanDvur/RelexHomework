@@ -40,6 +40,16 @@ dependencyManagement {
     }
 }
 
+tasks.jar {
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes["Main-Class"] = "com.relex.hotelservice.HotelServiceApplication"
+    }
+    archiveBaseName.set("hotel-service")
+}
+
+
 tasks.withType<Test> {
     useJUnitPlatform()
 }

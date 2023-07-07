@@ -43,6 +43,10 @@ dependencyManagement {
     }
 }
 
+tasks.jar {
+    archiveBaseName.set("rating-service")
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
 }
