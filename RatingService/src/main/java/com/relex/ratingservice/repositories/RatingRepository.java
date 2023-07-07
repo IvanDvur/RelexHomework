@@ -14,7 +14,7 @@ public interface RatingRepository extends JpaRepository<Rating, UUID> {
     List<Rating> findByUserId(UUID userId);
 
     List<Rating> findByHotelId(UUID hotelId);
-
+//    Возвращаем средний рейтинг для каждого отеля
     @Query("SELECT r.hotelId, AVG(r.rating) AS averageRating FROM Rating r GROUP BY r.hotelId")
     List<Object[]> getAverageRatingsByHotel();
 

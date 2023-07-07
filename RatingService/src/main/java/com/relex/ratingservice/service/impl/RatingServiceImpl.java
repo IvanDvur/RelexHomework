@@ -59,6 +59,7 @@ public class RatingServiceImpl implements RatingService {
     @Override
     public String getAverageHotelRatings() {
         StringBuffer sb = new StringBuffer();
+//        Получаем от HotelService информацию о отелях
         ResponseEntity<List<Hotel>> responseEntity = restTemplate.exchange(
                 fetchAllHotelsUrl,
                 HttpMethod.GET,
@@ -66,10 +67,38 @@ public class RatingServiceImpl implements RatingService {
                 new ParameterizedTypeReference<List<Hotel>>() {
                 }
         );
+
         List<Object[]> avgRatings = ratingRepository.getAverageRatingsByHotel();
         List<Hotel> hotels = responseEntity.getBody();
+        String csvData = csvBuilder(avgRatings, hotels);
+        return csvData;
+    }
 
-        avgRatings.forEach(x-> System.out.println(Arrays.toString(x)));
-        return "";
+    //    Составляем csv файл на основе среднего рейтинга отеля и информации о нём
+    private String csvBuilder(List<Object[]> avgRatings, List<Hotel> hotels) {
+        StringBuilder csvData = new StringBuilder();
+        csvData.append("Hotel ID,Hotel Name,Address,Average Rating\n");
+        for (Hotel hotel : hotels) {
+            UUID hotelId = hotel.getHotelId();
+            String hotelName = hotel.getName();
+            String address = hotel.getLocation();
+            String description = hotel.getDescription();
+            double averageRating = 0.0;
+            for (Object[] ratingData : avgRatings) {
+                UUID ratingHotelId = (UUID) ratingData[0];
+                double ratingValue = (double) ratingData[1];
+                if (hotelId.equals(ratingHotelId)) {
+                    averageRating = ratingValue;
+                    break;
+                }
+            }
+            csvData.append(hotelId).append(",")
+                    .append(hotelName).append(",")
+                    .append(address).append(",")
+                    .append(averageRating).append(",")
+                    .append(description).append(",")
+                    .append("\n");
+        }
+        return csvData.toString();
     }
 }
