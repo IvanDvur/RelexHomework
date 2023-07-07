@@ -25,26 +25,26 @@ jobs:
           image: ivandvurechenskiy/user-service
           tags: latest
           registry: docker.io
-          dockerfile: ./Dockerfile
+          dockerfile: ./UserService/Dockerfile
           username: ivandvurechenskiy
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build & Push Docker Image hotel-service
         uses: mr-smithers-excellent/docker-build-push@v5
         with:
-          context: ./HotelService
+          context: .HotelService/HotelService
           image: ivandvurechenskiy/hotel-service
           tags: latest
           registry: docker.io
           dockerfile: ./Dockerfile
           username: ivandvurechenskiy
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Build & Push Docker Image sender-service
+      - name: Build & Push Docker Image rating service
         uses: mr-smithers-excellent/docker-build-push@v5
         with:
           context: ./RatingService
           image: ivandvurechenskiy/rating-service
           tags: latest
           registry: docker.io
-          dockerfile: ./Dockerfile
+          dockerfile: ./RatingService/Dockerfile
           username: ivandvurechenskiy
           password: ${{ secrets.DOCKER_PASSWORD }}
