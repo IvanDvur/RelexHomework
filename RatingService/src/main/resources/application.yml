@@ -1,14 +1,14 @@
 server:
-  port: 8080
+  port: 8082
+
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: postgres
-    url: jdbc:postgresql://localhost:5432/userdb
+    url: jdbc:postgresql://localhost:5432/ratingdb
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
-fetchRatingsBaseUrl: http://localhost:8082/ratings/users/
-fetchAllRatingsURL: http://localhost:8082/ratings
+fetchAllHotelsURL: http://localhost:8081/hotels

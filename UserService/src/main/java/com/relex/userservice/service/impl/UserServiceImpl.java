@@ -1,5 +1,6 @@
 package com.relex.userservice.service.impl;
 
+import com.relex.userservice.domain.Rating;
 import com.relex.userservice.domain.User;
 import com.relex.userservice.exceptions.InvalidDataFormatException;
 import com.relex.userservice.exceptions.ResourceNotFoundException;
@@ -10,20 +11,31 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.*;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    @Value("${fetchRatingsBaseUrl}")
+    private String fetchRatingsBaseURL;
+
+    @Value("${fetchAllRatingsURL}")
+    private String fetchAllRatingsURL;
+
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    private final UserRepository userRepository;
+    private final RestTemplate restTemplate;
+
 
     @Override
     public User saveUser(User user) throws InvalidDataFormatException {
@@ -39,11 +51,31 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUser() {
-        return userRepository.findAll();
+        ResponseEntity<List<Rating>> responseEntity = restTemplate.exchange(
+                fetchAllRatingsURL,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<Rating>>() {
+                }
+        );
+        List<Rating> allRatings = responseEntity.getBody();
+        Map<UUID, List<Rating>> ratingMap = new HashMap<>();
+        allRatings.forEach(x -> {
+            UUID userId = x.getUserId();
+            ratingMap.computeIfAbsent(userId, k -> new ArrayList<>()).add(x);
+        });
+        List<User> users = userRepository.findAll();
+        users.forEach(x -> x.setUserRatings(ratingMap.get(x.getUserId())));
+        return users;
     }
+
 
     @Override
     public User getUser(UUID userId) {
-        return this.userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Пользователь c id " + userId + " не найден"));
+        User user = this.userRepository.findById(userId).orElseThrow(() ->
+                new ResourceNotFoundException("Пользователь c id " + userId + " не найден"));
+        List<Rating> ratingsForUser = restTemplate.getForObject(fetchRatingsBaseURL + user.getUserId(), ArrayList.class);
+        user.setUserRatings(ratingsForUser);
+        return user;
     }
 }
