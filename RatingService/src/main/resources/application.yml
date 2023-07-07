@@ -9,6 +9,17 @@ spring:
     url: jdbc:postgresql://localhost:5432/ratingdb
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
+  application:
+    name: rating-service
 fetchAllHotelsURL: http://localhost:8081/hotels
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      default-zone: http://localhost:8761/eureka

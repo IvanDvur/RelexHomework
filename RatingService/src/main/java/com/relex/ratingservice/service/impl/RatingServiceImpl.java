@@ -92,8 +92,7 @@ public class RatingServiceImpl implements RatingService {
                     break;
                 }
             }
-            csvData.append(hotelId).append(",")
-                    .append(hotelName).append(",")
+            csvData.append(hotelName).append(",")
                     .append(address).append(",")
                     .append(averageRating).append(",")
                     .append(description).append(",")
