@@ -25,7 +25,7 @@ jobs:
           image: ivandvurechenskiy/user-service
           tags: latest
           registry: docker.io
-          dockerfile: ./UserService/Dockerfile
+          dockerfile: ./Dockerfile
           username: ivandvurechenskiy
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build & Push Docker Image hotel-service
@@ -35,7 +35,7 @@ jobs:
           image: ivandvurechenskiy/hotel-service
           tags: latest
           registry: docker.io
-          dockerfile: ./HotelService/Dockerfile
+          dockerfile: ./Dockerfile
           username: ivandvurechenskiy
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build & Push Docker Image sender-service
@@ -45,6 +45,6 @@ jobs:
           image: ivandvurechenskiy/rating-service
           tags: latest
           registry: docker.io
-          dockerfile: ./RatingService/Dockerfile
+          dockerfile: ./Dockerfile
           username: ivandvurechenskiy
           password: ${{ secrets.DOCKER_PASSWORD }}
