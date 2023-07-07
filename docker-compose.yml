@@ -59,10 +59,11 @@ services:
         condition: service_healthy
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://userdb:5432/userdb
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATASOURCE_USERNAME=userdb_user
+      - SPRING_DATASOURCE_PASSWORD=userdb_password
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - TZ=Europe/Moscow
+      - eureka.client.serviceUrl.defaultZone=http://service-registry:8761/eureka/
     ports:
       - "8080:8080"
 
@@ -74,10 +75,11 @@ services:
         condition: service_healthy
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://hoteldb:5432/hoteldb
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATASOURCE_USERNAME=hoteldb_user
+      - SPRING_DATASOURCE_PASSWORD=hoteldb_password
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - TZ=Europe/Moscow
+      - eureka.client.serviceUrl.defaultZone=http://service-registry:8761/eureka/
     ports:
       - "8081:8081"
 
@@ -89,16 +91,19 @@ services:
         condition: service_healthy
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://ratingdb:5432/ratingdb
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATASOURCE_USERNAME=ratingdb_user
+      - SPRING_DATASOURCE_PASSWORD=ratingdb_password
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
       - TZ=Europe/Moscow
+      - eureka_client_serviceUrl_defaultZone=http://service-registry:8761/eureka/
     ports:
       - "8082:8082"
 
   service-registry:
     container_name: service-registry
     image: ivandvurechenskiy/service-registry:latest
+    environment:
+      - eureka.instance.hostname=service-registry
     ports:
       - "8761:8761"
 
