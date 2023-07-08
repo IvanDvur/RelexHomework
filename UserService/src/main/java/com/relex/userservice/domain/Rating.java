@@ -25,5 +25,7 @@ public class Rating {
     @Max(10L)
     private int rating;
 
+    private Hotel hotel;
+
     private String feedback;
 }

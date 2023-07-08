@@ -1,9 +1,11 @@
 package com.relex.userservice.service.impl;
 
+import com.relex.userservice.domain.Hotel;
 import com.relex.userservice.domain.Rating;
 import com.relex.userservice.domain.User;
 import com.relex.userservice.exceptions.InvalidDataFormatException;
 import com.relex.userservice.exceptions.ResourceNotFoundException;
+import com.relex.userservice.feignclients.HotelService;
 import com.relex.userservice.repositories.UserRepository;
 import com.relex.userservice.service.UserService;
 
@@ -30,7 +32,7 @@ public class UserServiceImpl implements UserService {
 
     @Value("${fetchAllRatingsURL}")
     private String fetchAllRatingsURL;
-
+    private final HotelService hotelService;
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
@@ -54,13 +56,15 @@ public class UserServiceImpl implements UserService {
                 fetchAllRatingsURL,
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<List<Rating>>() {
+                new ParameterizedTypeReference<>() {
                 }
         );
         List<Rating> allRatings = responseEntity.getBody();
         Map<UUID, List<Rating>> ratingMap = new HashMap<>();
         allRatings.forEach(x -> {
             UUID userId = x.getUserId();
+            Hotel hotel = hotelService.getHotel(x.getHotelId().toString());
+            x.setHotel(hotel);
             ratingMap.computeIfAbsent(userId, k -> new ArrayList<>()).add(x);
         });
         List<User> users = userRepository.findAll();
