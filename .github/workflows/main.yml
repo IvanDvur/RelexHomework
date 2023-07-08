@@ -58,3 +58,13 @@ jobs:
           dockerfile: ./ServiceRegistry/Dockerfile
           username: ivandvurechenskiy
           password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build & Push Docker Image api-gateway
+        uses: mr-smithers-excellent/docker-build-push@v5
+        with:
+          context: ./ApiGateway
+          image: ivandvurechenskiy/api-gateway
+          tags: latest
+          registry: docker.io
+          dockerfile: ./ApiGateway/Dockerfile
+          username: ivandvurechenskiy
+          password: ${{ secrets.DOCKER_PASSWORD }}
