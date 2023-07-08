@@ -77,7 +77,7 @@ public class RatingServiceImpl implements RatingService {
     //    Составляем csv файл на основе среднего рейтинга отеля и информации о нём
     private String csvBuilder(List<Object[]> avgRatings, List<Hotel> hotels) {
         StringBuilder csvData = new StringBuilder();
-        csvData.append("Hotel ID,Hotel Name,Address,Average Rating\n");
+        csvData.append("Hotel Name,Address,Average Rating\n");
         for (Hotel hotel : hotels) {
             UUID hotelId = hotel.getHotelId();
             String hotelName = hotel.getName();
@@ -94,8 +94,7 @@ public class RatingServiceImpl implements RatingService {
             }
             csvData.append(hotelName).append(",")
                     .append(address).append(",")
-                    .append(averageRating).append(",")
-                    .append(description).append(",")
+                    .append(averageRating)
                     .append("\n");
         }
         return csvData.toString();

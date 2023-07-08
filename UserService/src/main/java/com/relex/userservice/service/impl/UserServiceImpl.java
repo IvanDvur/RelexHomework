@@ -21,7 +21,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 
 
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -77,5 +76,11 @@ public class UserServiceImpl implements UserService {
         List<Rating> ratingsForUser = restTemplate.getForObject(fetchRatingsBaseURL + user.getUserId(), ArrayList.class);
         user.setUserRatings(ratingsForUser);
         return user;
+    }
+
+    @Override
+    public String getAverageHotelRatings() {
+        String avgRatingsCsv = restTemplate.getForObject("http://rating-service/ratings/getAverage",String.class);
+        return avgRatingsCsv;
     }
 }

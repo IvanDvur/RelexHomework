@@ -34,4 +34,10 @@ public class UserController{
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @GetMapping("/getAverage")
+    public ResponseEntity<String> getAverageHotelRatings(){
+        String avgCsv = userService.getAverageHotelRatings();
+        return new ResponseEntity<>(avgCsv,HttpStatus.OK);
+    }
+
 }

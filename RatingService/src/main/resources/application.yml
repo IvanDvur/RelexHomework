@@ -13,7 +13,8 @@ spring:
     show-sql: true
   application:
     name: rating-service
-fetchAllHotelsURL: http://localhost:8081/hotels
+
+fetchAllHotelsURL: http://hotel-service/hotels
 
 eureka:
   instance:

@@ -13,4 +13,6 @@ public interface UserService {
     List<User> getAllUser();
 
     User getUser(UUID userId) throws ResourceNotFoundException;
+
+    String getAverageHotelRatings();
 }
