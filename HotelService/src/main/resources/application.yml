@@ -8,8 +8,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/hoteldb
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
+
   application:
     name: hotel-service
 eureka:

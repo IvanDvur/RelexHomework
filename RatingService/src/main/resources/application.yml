@@ -9,7 +9,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/ratingdb
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
   application:
     name: rating-service
