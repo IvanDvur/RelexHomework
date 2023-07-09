@@ -101,7 +101,7 @@ curl --location 'http://localhost:8083/ratings' \
 ## Просмотр средней оценки по всем отелям
 curl --location 'http://localhost:8083/ratings/getAverage'
 ## Ответ
-Hotel Name,Address,Average Rating
-SuperHotel,Voronezh,5.333333333333333
+Hotel Name,Address,Average Rating\
+SuperHotel,Voronezh,5.333333333333333\
 BadHotel,Voronezh,2.0
 
