@@ -12,8 +12,7 @@ spring:
     show-sql: true
   application:
     name: user-service
-fetchRatingsBaseUrl: http://rating-service/ratings/users/
-fetchAllRatingsURL: http://rating-service/ratings
+
 
 eureka:
   instance:

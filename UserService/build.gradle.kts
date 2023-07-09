@@ -25,9 +25,7 @@ repositories {
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/io.github.resilience4j/resilience4j-spring-boot3
     implementation("io.github.resilience4j:resilience4j-spring-boot3:2.0.2")
-    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop
     implementation("org.springframework.boot:spring-boot-starter-aop:3.1.0")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -39,7 +37,6 @@ dependencies {
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.projectlombok:lombok")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 dependencyManagement {

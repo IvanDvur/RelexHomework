@@ -14,7 +14,6 @@ spring:
   application:
     name: rating-service
 
-#fetchAllHotelsURL: http://hotel-service/hotels
 
 eureka:
   instance:
