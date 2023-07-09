@@ -3,18 +3,14 @@ package com.relex.ratingservice.service.impl;
 import com.relex.ratingservice.domain.Hotel;
 import com.relex.ratingservice.domain.Rating;
 import com.relex.ratingservice.exceptions.InvalidDataFormatException;
+import com.relex.ratingservice.feignclients.HotelService;
 import com.relex.ratingservice.repositories.RatingRepository;
 import com.relex.ratingservice.service.RatingService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
@@ -22,10 +18,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class RatingServiceImpl implements RatingService {
 
-    @Value("${fetchAllHotelsURL}")
-    private String fetchAllHotelsUrl;
-
-    private final RestTemplate restTemplate;
+    private final HotelService hotelService;
     private final RatingRepository ratingRepository;
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
@@ -60,16 +53,8 @@ public class RatingServiceImpl implements RatingService {
     public String getAverageHotelRatings() {
         StringBuffer sb = new StringBuffer();
 //        Получаем от HotelService информацию о отелях
-        ResponseEntity<List<Hotel>> responseEntity = restTemplate.exchange(
-                fetchAllHotelsUrl,
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<Hotel>>() {
-                }
-        );
-
+        List<Hotel> hotels = hotelService.getAllHotels();
         List<Object[]> avgRatings = ratingRepository.getAverageRatingsByHotel();
-        List<Hotel> hotels = responseEntity.getBody();
         String csvData = csvBuilder(avgRatings, hotels);
         return csvData;
     }

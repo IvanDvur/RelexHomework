@@ -1,7 +1,6 @@
 package com.relex.hotelservice.api;
 
 import com.relex.hotelservice.domain.Hotel;
-import com.relex.hotelservice.exceptions.ExceptionHandler;
 import com.relex.hotelservice.services.HotelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,12 +13,12 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/hotels")
-public class HotelController extends ExceptionHandler {
+public class HotelController{
 
     private final HotelService hotelService;
 
     @PostMapping
-    public ResponseEntity<Hotel> createHotel(@RequestBody  Hotel hotel){
+    public ResponseEntity<Hotel> createHotel(@RequestBody Hotel hotel){
         Hotel hotel1 = hotelService.saveHotel(hotel);
         return new ResponseEntity<>(hotel1, HttpStatus.CREATED);
     }

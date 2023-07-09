@@ -19,7 +19,7 @@ public class ExceptionHandler {
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler(InvalidDataFormatException.class)
-    public ResponseEntity<Map<String, Object>> invalidDataFormatExceptionHandler(ResourceNotFoundException e) {
+    public ResponseEntity<Map<String, Object>> invalidDataFormatExceptionHandler(InvalidDataFormatException e) {
         Map<String,Object> response = new HashMap<>();
         response.put("message",e.getMessage());
         response.put("status",HttpStatus.BAD_REQUEST);

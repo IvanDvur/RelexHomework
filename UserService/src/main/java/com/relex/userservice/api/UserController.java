@@ -33,6 +33,18 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllUser(), HttpStatus.OK);
     }
 
+    @GetMapping("/getAverage")
+    @CircuitBreaker(name = "ratingServiceBreaker", fallbackMethod = "getAverageFallback")
+    public ResponseEntity<String> getAverageHotelRatings() {
+        String avgCsv = userService.getAverageHotelRatings();
+        return new ResponseEntity<>(avgCsv, HttpStatus.OK);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getUser(@PathVariable("userId") String userId) {
+        User user = userService.getUser(UUID.fromString(userId));
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
 
     public ResponseEntity<User> ratingServiceFallback(Exception ex) {
         logger.info("Сервис rating-service недоступен с ошибкой: {}", ex.getMessage());
@@ -44,16 +56,12 @@ public class UserController {
 
     }
 
-    @GetMapping("/{userId}")
-    @CircuitBreaker(name = "ratingServiceBreaker", fallbackMethod = "ratingServiceFallback")
-    public ResponseEntity<User> getAllUsers(@PathVariable("userId") String userId) {
-        User user = userService.getUser(UUID.fromString(userId));
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    public ResponseEntity<String> getAverageFallback(Exception e){
+        logger.info("Не удалось получить рейтинг отелей. Ошибка {}", e.getMessage());
+        return new ResponseEntity<>("Ошибка соединения, попробуйте позже",HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @GetMapping("/getAverage")
-    public ResponseEntity<String> getAverageHotelRatings() {
-        String avgCsv = userService.getAverageHotelRatings();
-        return new ResponseEntity<>(avgCsv, HttpStatus.OK);
-    }
+
+
+
 }

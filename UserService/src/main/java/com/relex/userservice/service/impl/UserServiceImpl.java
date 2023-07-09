@@ -6,6 +6,7 @@ import com.relex.userservice.domain.User;
 import com.relex.userservice.exceptions.InvalidDataFormatException;
 import com.relex.userservice.exceptions.ResourceNotFoundException;
 import com.relex.userservice.feignclients.HotelService;
+import com.relex.userservice.feignclients.RatingService;
 import com.relex.userservice.repositories.UserRepository;
 import com.relex.userservice.service.UserService;
 
@@ -14,9 +15,6 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -27,15 +25,10 @@ import java.util.*;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Value("${fetchRatingsBaseUrl}")
-    private String fetchRatingsBaseURL;
-
-    @Value("${fetchAllRatingsURL}")
-    private String fetchAllRatingsURL;
+    private final RatingService ratingService;
     private final HotelService hotelService;
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     private final UserRepository userRepository;
-    private final RestTemplate restTemplate;
 
 
     @Override
@@ -52,14 +45,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUser() {
-        ResponseEntity<List<Rating>> responseEntity = restTemplate.exchange(
-                fetchAllRatingsURL,
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<>() {
-                }
-        );
-        List<Rating> allRatings = responseEntity.getBody();
+        List<Rating> allRatings = ratingService.getAllRatings();
         Map<UUID, List<Rating>> ratingMap = new HashMap<>();
         allRatings.forEach(x -> {
             UUID userId = x.getUserId();
@@ -77,14 +63,14 @@ public class UserServiceImpl implements UserService {
     public User getUser(UUID userId) {
         User user = this.userRepository.findById(userId).orElseThrow(() ->
                 new ResourceNotFoundException("Пользователь c id " + userId + " не найден"));
-        List<Rating> ratingsForUser = restTemplate.getForObject(fetchRatingsBaseURL + user.getUserId(), ArrayList.class);
+        List<Rating> ratingsForUser = ratingService.getRatingsForUser(userId.toString());
         user.setUserRatings(ratingsForUser);
         return user;
     }
 
     @Override
     public String getAverageHotelRatings() {
-        String avgRatingsCsv = restTemplate.getForObject("http://rating-service/ratings/getAverage",String.class);
+        String avgRatingsCsv = ratingService.getAverageRating();
         return avgRatingsCsv;
     }
 }
