@@ -41,7 +41,6 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    @CircuitBreaker(name = "ratingServiceBreaker", fallbackMethod = "ratingServiceFallback")
     public ResponseEntity<User> getUser(@PathVariable("userId") String userId) {
         User user = userService.getUser(UUID.fromString(userId));
         return new ResponseEntity<>(user, HttpStatus.OK);

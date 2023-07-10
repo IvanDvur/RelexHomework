@@ -74,7 +74,14 @@ curl --location --request GET 'http://localhost:8083/users/a6c7764c-15bb-4465-8b
 }'
 ## Ответ
 {
-"userId": "3f0538ec-6c4c-4b1f-87b6-e459e382a75e",
+"message": "Пользователь c id a6c7764c-15bb-4465-8bfc-6cf223b0a1a3 не найден",
+"status": "NOT_FOUND"
+}
+## Поиск всех пользователей при отключенном rating-service или hotel-service
+curl --location 'http://localhost:8083/users'
+## Ответ
+{
+"userId": "264eaea2-b2d6-4476-8ada-90a98913ad45",
 "firstName": null,
 "email": null,
 "lastName": null,
